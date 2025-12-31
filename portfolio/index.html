@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prince Patel — Diploma CE</title>
+  <meta name="description" content="Prince Patel — Portfolio. Diploma in CE. CGPA 7.37." />
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#071222;
+      --card: rgba(255,255,255,0.03);
+      --muted:#96a3b3;
+      --accent:#6ee7b7;
+      --accent-2:#60a5fa;
+      --maxw:1100px;
+      --radius:12px;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family:inherit;
+      margin:0;
+      background:linear-gradient(180deg,#061321 0%, #031426 100%);
+      color:#e9f5f2;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.55;
+      font-size:16px;
+      overflow-x:hidden;
+    }
+
+    /* canvas background */
+    #ai-bg{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      display:block;
+      width:100%;
+      height:100%;
+    }
+
+    .container{max-width:var(--maxw); margin:0 auto; padding:28px; position:relative; z-index:10;}
+    .site-header{position:sticky; top:0; backdrop-filter:blur(6px); background:linear-gradient(180deg, rgba(2,6,13,0.35), rgba(2,6,13,0.15)); border-bottom:1px solid rgba(255,255,255,0.02); z-index:20;}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px; padding:12px 28px;}
+    .brand h1{margin:0;font-size:20px;}
+    .brand .tagline{margin:2px 0 0;color:var(--muted);font-size:13px;}
+    .nav{display:flex;gap:12px;align-items:center;}
+    .nav a{color:inherit;text-decoration:none;padding:8px 10px;border-radius:8px;font-weight:600;font-size:14px;}
+    .btn-outline{border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--accent);text-decoration:none;}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#022; padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700;box-shadow:0 6px 20px rgba(50,200,180,0.06);}
+
+    /* hero */
+    .hero{padding:48px 0; position:relative; z-index:10;}
+    .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;}
+    .hero-text h2{font-size:28px;margin:0 0 12px;color:#eaf6f0;}
+    .lead{color:var(--muted);margin:0 0 18px;}
+    .hero-ctas{display:flex;gap:12px;margin-bottom:18px;}
+    .quick-stats{display:flex;gap:18px;list-style:none;padding:0;margin:0;color:var(--muted);font-weight:700;}
+    .hero-card{background:var(--card);border-radius:14px;padding:12px;box-shadow:0 10px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+    .hero-card img{width:100%;border-radius:8px;display:block;}
+    .hero-card-caption{font-size:13px;color:var(--muted);margin:10px 0 0}
+
+    /* about */
+    .about{padding:28px 0 36px;}
+    .about-grid{display:flex;gap:28px}
+    .about-grid h4{margin:0 0 8px}
+    .skills-list{color:var(--muted)}
+
+    /* projects */
+    .projects{padding:28px 0;}
+    .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .project-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 24px rgba(2,6,23,0.55)}
+    .project-card img{width:100%;display:block}
+    .project-body{padding:14px}
+    .project-body h4{margin:0 0 8px;font-size:16px}
+    .project-meta{color:var(--muted);font-size:13px;margin-top:8px}
+
+    .skills{padding:18px 0}
+    .skills-chips{display:flex;flex-wrap:wrap;gap:10px}
+    .skills-chips span{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600;font-size:13px}
+
+    .contact{padding:28px 0 48px}
+    .contact-row{display:flex;gap:12px;align-items:center}
+    .muted{color:var(--muted);font-size:14px}
+    .site-footer{border-top:1px solid rgba(255,255,255,0.02);padding:18px 0;text-align:center;color:var(--muted);font-size:14px}
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr;}
+      .projects-grid{grid-template-columns:repeat(2,1fr)}
+      .about-grid{flex-direction:column}
+    }
+    @media (max-width:640px){
+      .header-inner{padding:10px 20px}
+      .nav{display:none}
+      .projects-grid{grid-template-columns:1fr}
+      .brand h1{font-size:18px}
+      .hero-text h2{font-size:20px}
+      .container{padding:18px}
+    }
+
+    /* small helper for download link */
+    .muted a{color:var(--accent-2);text-decoration:none}
+  </style>
+</head>
+<body>
+  <!-- Animated AI-style wallpaper canvas -->
+  <canvas id="ai-bg" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>Prince Patel</h1>
+        <p class="tagline">Diploma in CE • CGPA 7.37</p>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+        <a class="btn-outline" href="resume.pdf" download>Download Resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <h2>Hi Folks, I'm Prince Patel. I build practical solutions that deliver results.</h2>
+          <p class="lead">Diploma in Computer Engineering with a CGPA of 7.37. Focused on learning, building, and shipping projects that demonstrate technical skill and growth.</p>
+          <div class="hero-ctas">
+            <a class="btn-primary" href="#projects">See my work</a>
+            <a class="btn-outline" href="mailto:prince@example.com">Email me</a>
+          </div>
+          <ul class="quick-stats">
+            <li><strong>Diploma</strong> Computer Engineering</li>
+            <li><strong>CGPA</strong> 7.37</li>
+            <li><strong>Open</strong> to roles & internships</li>
+          </ul>
+        </div>
+
+        <div class="hero-card" aria-hidden="true">
+          <img src="https://via.placeholder.com/420x260.png?text=Project+Preview" alt="Project screenshot placeholder" />
+          <p class="hero-card-caption"><strong>Featured:</strong> Add your real project screenshots here — architecture diagrams and screenshots work great.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="container about">
+      <h3>About</h3>
+      <p>I am Prince Patel — diploma graduate in Computer Engineering (CGPA 7.37). I enjoy solving problems, building small-to-medium scale projects, and learning modern tools and best practices. I am actively working on projects that demonstrate Machine Learning, systems basics, and automation.</p>
+
+      <div class="about-grid">
+        <div>
+          <h4>Education</h4>
+          <ul>
+            <li>Diploma in Computer Engineering</li>
+            <li>CGPA: 7.37</li>
+          </ul>
+        </div>
+        <div>
+          <h4>What I focus on</h4>
+          <ul class="skills-list">
+            <li>Web development (HTML/CSS, optionally JS)</li>
+            <li>Data science, and Machine learning
+            <li>Automation & small backend services</li>
+            <li>Learning data structures, system basics</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="container projects">
+      <h3>Selected Projects</h3>
+      <div class="projects-grid">
+        <!-- Example project cards: replace with your real projects -->
+        <article class="project-card">
+          <img src="https://via.placeholder.com/600x360.png?text=Project+1" alt="Project 1" />
+          <div class="project-body">
+            <h4><a href="#">Student Marks Predictor</a></h4>
+            <p>Developed a student marks predictor using machine learning algorithms to analyse historical data and predict future academic
+performance. Utilized Python and libraries like Scikit-learn for data pre-processing, model training, and evaluation. Implemented a
+user-friendly interface for easy interaction and prediction result. (problem → action → result).</p>
+            <p class="project-meta"><strong>Tech:</strong>  Python | Machine Learning </p>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <img src="https://via.placeholder.com/600x360.png?text=Project+2" alt="Project 2" />
+          <div class="project-body">
+            <h4><a href="#">Fighting Game </a></h4>
+            <p>Developed a 2D fighting game inspired by the Shadow Fight series using Unity, implementing core gameplay mechanics such as
+character movement, combat systems, and enemy AI. Designed smooth animations, optimized performance, and integrated sound
+effects and UI elements to enhance player experience. Collaborated in a team to ensure timely project delivery and cross-platform
+compatibility.</p>
+            <p class="project-meta"><strong>Tech:</strong> Unity</p>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <img src="https://via.placeholder.com/600x360.png?text=Project+3" alt="Project 3" />
+          <div class="project-body">
+            <h4><a href="#">To do list </a></h4>
+            <p>Built a simple To-Do List web application using Django, allowing users to create, update, and delete tasks with secure login. Used
+Django's database tools to manage tasks efficiently and designed the front-end with HTML, CSS, and JavaScript. Enabled basic
+features like adding and removing tasks to help users stay organized. Deployed the app online for easy access and use.</p>
+            <p class="project-meta"><strong>Tech:</strong> Python-Django framework</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills" class="container skills">
+      <h3>Skills & Interests</h3>
+      <div class="skills-chips">
+        <span>HTML,CSS,C++,js,and PHP</span>
+        <span>Data Science</span>
+        <span>Machine learning</span>
+        <span>Linux</span>
+        <span>Git</span>
+        <span>Problem Solving</span>
+      </div>
+    </section>
+
+    <section id="contact" class="container contact">
+      <h3>Contact</h3>
+      <p>If you want to collaborate or have opportunities, email me at <a href="mailto:theprince.spatel@gmail.com>"prince <theprince.spatel@gmail.com></a> or download my resume.</p>
+      <div class="contact-row">
+        <a class="btn-primary" href="mailto:theprince.spatel@gmail.com">Email:theprince.spatel@gmail.com</a>
+        <a class="btn-outline" href="resume.pdf" download>Download Resume</a>
+      </div>
+      <p class="muted">Links: <a href="#" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://www.linkedin.com/in/princespatel/" target="_blank" rel="noopener">GitHub</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Prince Patel — Built for impact. • <a href="mailto:prince <theprince.spatel@gmail.com>"> theprince.spatel@gmail.com</a></small>
+    </div>
+  </footer>
+
+  <!-- Animated AI wallpaper script -->
+  <script>
+    // small helper: set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // AI-style animated particle network background
+    (function () {
+      const canvas = document.getElementById('ai-bg');
+      const ctx = canvas.getContext('2d', { alpha: true });
+      let w = 0, h = 0, dpr = Math.max(1, window.devicePixelRatio || 1);
+      const config = {
+        particleCount: 60,
+        maxRadius: 2.8,
+        connectionDistance: 140,
+        speed: 0.4,
+        colors: {
+          bgGlow: 'rgba(14, 21, 40, 0.6)',
+          particle: ['#6ee7b7', '#60a5fa', '#b388ff']
+        }
+      };
+
+      function resize() {
+        dpr = Math.max(1, window.devicePixelRatio || 1);
+        w = canvas.width = Math.floor(window.innerWidth * dpr);
+        h = canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resize, { passive: true });
+
+      // setup particles
+      const particles = [];
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+      function initParticles() {
+        particles.length = 0;
+        const count = Math.max(20, Math.min(140, Math.round((config.particleCount * window.innerWidth) / 1200)));
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: rand(0, window.innerWidth),
+            y: rand(0, window.innerHeight),
+            vx: rand(-config.speed, config.speed),
+            vy: rand(-config.speed, config.speed),
+            r: rand(0.8, config.maxRadius),
+            color: config.colors.particle[i % config.colors.particle.length],
+            phase: rand(0, Math.PI * 2)
+          });
+        }
+      }
+
+      // draw function
+      function draw() {
+        // background subtle radial gradient
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        const g = ctx.createLinearGradient(0, 0, window.innerWidth, window.innerHeight);
+        g.addColorStop(0, 'rgba(2,8,22,0.7)');
+        g.addColorStop(1, 'rgba(4,12,25,0.55)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        // soft ambient glow overlay
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for (let p of particles) {
+          // update motion (gentle oscillation)
+          p.x += p.vx + Math.cos(p.phase) * 0.15;
+          p.y += p.vy + Math.sin(p.phase) * 0.15;
+          p.phase += 0.005;
+
+          // wrap around edges
+          if (p.x < -20) p.x = window.innerWidth + 20;
+          if (p.x > window.innerWidth + 20) p.x = -20;
+          if (p.y < -20) p.y = window.innerHeight + 20;
+          if (p.y > window.innerHeight + 20) p.y = -20;
+        }
+
+        // draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i], b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < config.connectionDistance) {
+              const alpha = 0.6 * (1 - dist / config.connectionDistance);
+              ctx.strokeStyle = `rgba(108,170,255,${alpha * 0.9})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // draw particles (glow + core)
+        for (let p of particles) {
+          // glow
+          ctx.beginPath();
+          const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, Math.max(20, p.r * 18));
+          glow.addColorStop(0, p.color.replace('#','rgba(') ? hexToRGBA(p.color, 0.18) : 'rgba(102,170,255,0.12)');
+          glow.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = glow;
+          ctx.fillRect(p.x - 40, p.y - 40, 80, 80);
+
+          // core
+          ctx.beginPath();
+          ctx.fillStyle = hexToRGBA(p.color, 1);
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      // tiny helper to convert hex to rgba
+      function hexToRGBA(hex, alpha){
+        const h = hex.replace('#','');
+        const bigint = parseInt(h, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      // animate
+      let raf;
+      function animate() {
+        draw();
+        raf = requestAnimationFrame(animate);
+      }
+
+      // init
+      function start() {
+        resize();
+        initParticles();
+        if (raf) cancelAnimationFrame(raf);
+        animate();
+      }
+
+      // pause on hidden to save CPU
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          if (raf) cancelAnimationFrame(raf);
+        } else {
+          start();
+        }
+      });
+
+      // initial start
+      start();
+    })();
+  </script>
+</body>
+</html>
+`
